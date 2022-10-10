@@ -1,5 +1,6 @@
 package com.sam.springbootmall.controller;
 
+import com.sam.springbootmall.constant.ProductCategory;
 import com.sam.springbootmall.dto.ProductRequest;
 import com.sam.springbootmall.model.Product;
 import com.sam.springbootmall.service.ProductService;
@@ -19,8 +20,8 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProduct() {
-        List<Product> productList = productService.getProducts();
+    public ResponseEntity<List<Product>> getProduct(@RequestParam(required = false) ProductCategory category, @RequestParam(required = false) String search) {
+        List<Product> productList = productService.getProducts(category, search);
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
 
@@ -43,8 +44,7 @@ public class ProductController {
     }
 
     @PutMapping("/products/{productId}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Integer productId,
-                                                 @RequestBody @Valid ProductRequest productRequest) {
+    public ResponseEntity<Product> updateProduct(@PathVariable Integer productId, @RequestBody @Valid ProductRequest productRequest) {
         // 檢查product是否存在
         Product product = productService.getProductById(productId);
         if (Objects.isNull(product)) {
