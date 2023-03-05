@@ -22,11 +22,17 @@ public class ProductController {
 
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getProduct(
+            // 查詢條件 Filtering
             @RequestParam(required = false) ProductCategory category,
-            @RequestParam(required = false) String search) {
+            @RequestParam(required = false) String search,
+            // 排序Sorting
+            @RequestParam(defaultValue = "create_date") String orderBy,
+            @RequestParam(defaultValue = "desc") String sort) {
         ProductQueryParams productQueryParams = new ProductQueryParams();
         productQueryParams.setCategory(category);
         productQueryParams.setSearch(search);
+        productQueryParams.setOrderBy(orderBy);
+        productQueryParams.setSort(sort);
 
         List<Product> productList = productService.getProducts(productQueryParams);
         return ResponseEntity.status(HttpStatus.OK).body(productList);
@@ -72,4 +78,18 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    public static void main(String[] args) {
+        String i = "轉不過啦";
+        int a = parseInt(i);
+        System.out.println(a);
+    }
+
+    public static int parseInt(String i) {
+        try {
+            int ii = Integer.parseInt(i);
+            return ii;
+        } catch (NumberFormatException n) {
+            return 0;
+        }
+    }
 }
