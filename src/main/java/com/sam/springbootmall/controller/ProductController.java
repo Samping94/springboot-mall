@@ -95,19 +95,4 @@ public class ProductController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
-    public static void main(String[] args) {
-        String i = "轉不過啦";
-        int a = parseInt(i);
-        System.out.println(a);
-    }
-
-    public static int parseInt(String i) {
-        try {
-            int ii = Integer.parseInt(i);
-            return ii;
-        } catch (NumberFormatException n) {
-            return 0;
-        }
-    }
 }
