@@ -44,9 +44,11 @@ public class ProductController {
         productQueryParams.setLimit(limit);
         productQueryParams.setOffset(offset);
 
+        // 取得product list
         List<Product> productList = productService.getProducts(productQueryParams);
+        // 取得數
         Integer total = productService.countProduct(productQueryParams);
-
+        // 分頁
         Page<Product> page = new Page<>();
         page.setLimit(limit);
         page.setOffset(offset);
