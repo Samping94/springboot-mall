@@ -1,6 +1,5 @@
 package com.sam.springbootmall.dao.impl;
 
-import com.sam.springbootmall.constant.ProductCategory;
 import com.sam.springbootmall.dao.ProductDao;
 import com.sam.springbootmall.dto.ProductQueryParams;
 import com.sam.springbootmall.dto.ProductRequest;
@@ -13,10 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class ProductDaoImpl implements ProductDao {
@@ -134,7 +130,7 @@ public class ProductDaoImpl implements ProductDao {
 
     private String addFilterSql(ProductQueryParams productQueryParams, String sql, Map<String, Object> map){
         // 查詢條件
-        if (productQueryParams.getCategory() != null) {
+        if (Objects.nonNull(productQueryParams.getCategory())) {
             sql = sql + " AND category = :category";
             map.put("category", productQueryParams.getCategory().name());
         }
