@@ -1,5 +1,6 @@
 package com.sam.springbootmall.dao;
 
+import com.sam.springbootmall.dto.UserLoginRequest;
 import com.sam.springbootmall.dto.UserRegisterRequest;
 import com.sam.springbootmall.model.User;
 
