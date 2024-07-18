@@ -4,6 +4,7 @@ import com.sam.springbootmall.dao.OrderDao;
 import com.sam.springbootmall.dao.ProductDao;
 import com.sam.springbootmall.dto.BuyItem;
 import com.sam.springbootmall.dto.CreateOrderRequest;
+import com.sam.springbootmall.model.Order;
 import com.sam.springbootmall.model.OrderItem;
 import com.sam.springbootmall.model.Product;
 import com.sam.springbootmall.service.OrderService;
@@ -25,7 +26,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Integer creatrOrder(Integer userId, CreateOrderRequest request) {
+    public Integer createOrder(Integer userId, CreateOrderRequest request) {
         int totalAmount = 0;
         List<OrderItem> orderItemList = new ArrayList<>();
 
@@ -35,6 +36,8 @@ public class OrderServiceImpl implements OrderService {
             if (Objects.nonNull(product)) {
                 int amount = buyItem.getQuantity() * product.getPrice();
                 totalAmount += amount;
+            } else {
+                throw new RuntimeException("查無商品編號為: " + buyItem.getProductId() + " 的商品 !");
             }
 
             // 轉換
@@ -51,5 +54,14 @@ public class OrderServiceImpl implements OrderService {
         orderDao.createOrderItems(orderId, orderItemList);
 
         return orderId;
+    }
+
+    @Override
+    public Order getOrderById(Integer orderId) {
+        Order order = orderDao.getOrderById(orderId);
+        List<OrderItem> orderItemList = orderDao.getOrderItemsById(orderId);
+        order.setOrderItems(orderItemList);
+
+        return order;
     }
 }
