@@ -1,6 +1,5 @@
 package com.sam.springbootmall.controller;
 
-import com.sam.springbootmall.dto.BuyItem;
 import com.sam.springbootmall.dto.CreateOrderRequest;
 import com.sam.springbootmall.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
