@@ -28,7 +28,7 @@ public class ProductDaoImpl implements ProductDao {
 
         Map<String, Object> map = new HashMap<>();
         // 查詢條件
-        sql = addFilterSql(productQueryParams, sql , map);
+        sql = addFilterSql(productQueryParams, sql, map);
 
         // 排序
         sql = sql + " ORDER BY " + productQueryParams.getOrderBy() + " " + productQueryParams.getSort();
@@ -123,12 +123,25 @@ public class ProductDaoImpl implements ProductDao {
 
         Map<String, Object> map = new HashMap<>();
         // 查詢條件
-        sql = addFilterSql(productQueryParams, sql , map);
+        sql = addFilterSql(productQueryParams, sql, map);
 
-      return  namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+        return namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
     }
 
-    private String addFilterSql(ProductQueryParams productQueryParams, String sql, Map<String, Object> map){
+    @Override
+    public void updateStock(Integer productId, Integer stock) {
+        String sql = "UPDATE product SET stock = :stock, last_modified_date = :lastModifiedDate " +
+                "WHERE product_id = :productId";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("productId", productId);
+        map.put("stock", stock);
+        map.put("lastModifiedDate", new Date());
+
+        namedParameterJdbcTemplate.update(sql, map);
+    }
+
+    private String addFilterSql(ProductQueryParams productQueryParams, String sql, Map<String, Object> map) {
         // 查詢條件
         if (Objects.nonNull(productQueryParams.getCategory())) {
             sql = sql + " AND category = :category";
