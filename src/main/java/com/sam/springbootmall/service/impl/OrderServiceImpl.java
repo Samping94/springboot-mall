@@ -5,6 +5,7 @@ import com.sam.springbootmall.dao.ProductDao;
 import com.sam.springbootmall.dao.UserDao;
 import com.sam.springbootmall.dto.BuyItem;
 import com.sam.springbootmall.dto.CreateOrderRequest;
+import com.sam.springbootmall.dto.OrderQueryParams;
 import com.sam.springbootmall.model.Order;
 import com.sam.springbootmall.model.OrderItem;
 import com.sam.springbootmall.model.Product;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -86,5 +88,20 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderItems(orderItemList);
 
         return order;
+    }
+
+    @Override
+    public List<Order> getOrders(OrderQueryParams params) {
+        List<Order> orderList = orderDao.getOrders(params);
+        for (Order order : orderList) {
+            order.setOrderItems(orderDao.getOrderItemsById(order.getOrderId()));
+        }
+
+        return orderList;
+    }
+
+    @Override
+    public Integer countOrder(OrderQueryParams params) {
+        return orderDao.countOrder(params);
     }
 }

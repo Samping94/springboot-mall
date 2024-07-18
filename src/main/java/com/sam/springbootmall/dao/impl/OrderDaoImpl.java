@@ -1,6 +1,7 @@
 package com.sam.springbootmall.dao.impl;
 
 import com.sam.springbootmall.dao.OrderDao;
+import com.sam.springbootmall.dto.OrderQueryParams;
 import com.sam.springbootmall.model.Order;
 import com.sam.springbootmall.model.OrderItem;
 import com.sam.springbootmall.rowmapper.OrderItemMapper;
@@ -12,6 +13,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -88,5 +90,40 @@ public class OrderDaoImpl implements OrderDao {
         map.put("orderId", orderId);
 
         return namedParameterJdbcTemplate.query(sql, map, new OrderItemMapper());
+    }
+
+    @Override
+    public List<Order> getOrders(OrderQueryParams params) {
+        String sql = "SELECT * FROM `order` WHERE 1=1 ";
+        Map<String, Object> map = new HashMap<>();
+        // 查詢條件
+        sql = addFilteringSql(sql, map, params);
+        // 排序
+        sql = sql + " ORDER BY created_date DESC";
+        // 分頁
+        sql = sql + " LIMIT :limit OFFSET :offset";
+
+        map.put("limit", params.getLimit());
+        map.put("offset", params.getOffset());
+
+        return namedParameterJdbcTemplate.query(sql, map, new OrderRawMapper());
+    }
+
+    @Override
+    public Integer countOrder(OrderQueryParams params) {
+        String sql = "SELECT count(*) FROM `order` WHERE 1=1 ";
+        Map<String, Object> map = new HashMap<>();
+        // 查詢條件
+        sql = addFilteringSql(sql, map, params);
+
+        return namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+    }
+
+    private String addFilteringSql(String sql, Map<String, Object> map, OrderQueryParams queryParams) {
+        if (Objects.nonNull(queryParams.getUserId())) {
+            sql = sql + "AND `user_id` = :userId";
+            map.put("userId", queryParams.getUserId());
+        }
+        return sql;
     }
 }
